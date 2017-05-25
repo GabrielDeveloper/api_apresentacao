@@ -1,0 +1,55 @@
+version: '2'
+services:
+  nginx:
+    image: gabrieldeveloper/nginx:latest
+    container_name: nginx
+    ports:
+     - "80:80"
+    volumes:
+     - ./:/var/www/html
+    networks:
+     - netapp
+
+  php:
+    image: gabrieldeveloper/php:latest
+    container_name: php
+    volumes:
+     - ./:/var/www/html
+    networks:
+     - netapp
+
+  redis:
+    image: redis:alpine
+    container_name: redis
+    networks:
+     - netapp
+
+  postgres:
+    image: postgres:9.6
+    container_name: postgres
+    environment:
+      POSTGRES_ROOT_PASSWORD: secret
+      POSTGRES_DATABASE: homestead
+      POSTGRES_USER: homestead
+      POSTGRES_PASSWORD: secret
+    volumes:
+     - data:/var/lib/postgresql
+    networks:
+     - netapp
+
+  mongo:
+    image: mongo:3.4
+    container_name: mongo
+    volumes:
+    - mongoData:/data/db
+    networks:
+    - netapp
+
+networks:
+  netapp:
+    driver: "bridge"
+volumes:
+  data:
+    driver: "local"
+  mongoData:
+    driver: "local"
